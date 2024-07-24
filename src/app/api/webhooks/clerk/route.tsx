@@ -69,7 +69,7 @@ export async function POST(req: Request) {
             image: image_url
         }
 
-        console.log(user)
+        // console.log(user)
 
         const newUser = await createUser(user)
 
@@ -86,8 +86,8 @@ export async function POST(req: Request) {
 
 
 
-    console.log(`Webhook with and ID of ${id} and type of ${eventType}`)
-    console.log('Webhook body:', body)
+    // console.log(`Webhook with and ID of ${id} and type of ${eventType}`)
+    // console.log('Webhook body:', body)
 
     return new Response('', { status: 200 })
 

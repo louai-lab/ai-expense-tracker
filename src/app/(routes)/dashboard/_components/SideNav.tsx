@@ -1,14 +1,12 @@
 'use client'
+import { UserButton } from "@clerk/nextjs";
 import { CircleDollarSign, LayoutGrid, PiggyBank, ReceiptText } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function SideNav() {
-
+export default async function SideNav() {
     const pathname = usePathname()
-
-    // console.log(pathname)
 
     const menuList = [
         {
@@ -62,7 +60,8 @@ export default function SideNav() {
                 ))}
             </div>
 
-            <div className="fixed bottom-10 p-5 flex gap-2">
+            <div className="fixed bottom-10 p-5 flex gap-2 items-center">
+                <UserButton />
                 Profile
             </div>
         </div>

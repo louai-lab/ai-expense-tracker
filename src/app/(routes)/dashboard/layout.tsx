@@ -1,6 +1,4 @@
 import React, { ReactNode } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import SideNav from './_components/SideNav';
 import DashboardHeader from './_components/DashboardHeader';
 
@@ -9,6 +7,7 @@ interface DashboardLayoutProps {
 }
 
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
+
     return (
         <div>
             <div className='fixed md:w-64 hidden md:block'>
