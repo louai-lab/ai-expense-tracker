@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 const budgetSchema = new mongoose.Schema({
+    description: { type: String, required: true },
     amount: { type: String, default: 0 },
     from: { type: Date, required: true },
     to: { type: Date, required: true },
@@ -14,10 +15,10 @@ const budgetSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    remain: [{
+    remain: {
         type: Number,
         default: 0
-    }],
+    },
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true }
 }, { timestamps: true })
 

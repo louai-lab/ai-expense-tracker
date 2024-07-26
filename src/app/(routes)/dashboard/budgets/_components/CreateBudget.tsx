@@ -11,31 +11,52 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from '@/components/ui/button'
 import { useState } from "react"
-import { format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
 import React from "react";
-import { cn } from "@/lib/utils"
-import { Calendar } from "@/components/ui/calendar"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
+import { DatePickerDemo } from "@/components/ui/datePicker";
+import { useUser } from "@clerk/nextjs";
+import { createBudget } from "../../../../../../lib/actions/budget.actions";
 
+interface Props {
+    userData: {
+        id: string,
+        clerkId: string,
+        firstName: string,
+        lastName: string,
+        email: string,
+        image: string
+    }
+}
 
-export default function CreateBudget() {
+export default function CreateBudget({ userData }: Props) {
 
     const [description, setDescription] = useState("")
     const [amount, setAmount] = useState("")
+    const [beginDate, setBeginDate] = useState<Date | undefined>(undefined);
+    const [endingDate, setEndingDate] = useState<Date | undefined>(undefined);
+    const { isLoaded, isSignedIn } = useUser()
+
+    // console.log(userData)
 
     const handleCreateBudget = async () => {
-        console.log(description)
-        console.log(amount)
-        console.log(date)
+
+        if (!userData?.id) {
+            console.error("User ID is missing");
+            return;
+        }
+
+        // console.log("try")
+
+        await createBudget({
+            description: description,
+            amount: amount,
+            beginDate: beginDate,
+            endingDate: endingDate,
+            userId: userData.id
+        });
     }
 
-    const [date, setDate] = useState<Date | null>(null)
-
+    if (!isLoaded) return <div>Loading ...</div>;
+    if (!isSignedIn) return <div>Please sign in</div>;
 
     return (
         <Dialog>
@@ -55,7 +76,7 @@ export default function CreateBudget() {
                     <DialogDescription>
                         <div className='bg-white mt-4'>
                             <div className='mt-2'>
-                                <h2 className='text-black font-medium'>Budget description or purpose</h2>
+                                <h2 className='text-black font-bold'>Budget description or purpose</h2>
                                 <Input
                                     type="text"
                                     placeholder="description & purpose"
@@ -65,7 +86,7 @@ export default function CreateBudget() {
                             </div>
 
                             <div className='mt-2'>
-                                <h2 className='text-black font-medium'>Budget Amount</h2>
+                                <h2 className='text-black font-bold'>Budget Amount</h2>
                                 <Input
                                     type="number"
                                     placeholder="e.g. 5000$"
@@ -75,35 +96,26 @@ export default function CreateBudget() {
                             </div>
 
                             <div className="mt-2">
-                                <h2 className='text-black font-medium'>Begin Date</h2>
+                                <h2 className='text-black font-bold'>Begin Date</h2>
 
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <Button
-                                            variant={"outline"}
-                                            className={cn(
-                                                "w-[280px] justify-start text-left font-normal",
-                                                !date && "text-muted-foreground"
-                                            )}
-                                        >
-                                            <CalendarIcon className="mr-2 h-4 w-4" />
-                                            {date ? format(date, "PPP") : <span>Pick a date</span>}
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0">
-                                        <Calendar
-                                            mode="single"
-                                            // selected={date}
-                                            // onSelect={setDate}
-                                            initialFocus
-                                        />
-                                    </PopoverContent>
-                                </Popover>
+                                <DatePickerDemo
+                                    date={beginDate}
+                                    setDate={setBeginDate}
+                                />
+                            </div>
+
+                            <div className="mt-2">
+                                <h2 className='text-black font-bold'>Ending Date</h2>
+
+                                <DatePickerDemo
+                                    date={endingDate}
+                                    setDate={setEndingDate}
+                                />
                             </div>
                         </div>
 
                         <Button
-                            disabled={!(description && amount)}
+                            disabled={!(description && amount && beginDate && endingDate)}
                             className='mt-4 w-full rounded-full'
                             onClick={() => handleCreateBudget()}>
                             Create Budget

@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
-import CreateBudget from './_components/CreateBudget'
 import BudgetList from './_components/BudgetList'
 
 
-function Budgets() {
+async function Budgets() {
 
     return (
         <div className='p-8'>
