@@ -33,3 +33,16 @@ export async function createBudget({
         console.error('Error creating budget:', error);
     }
 }
+
+interface Props {
+    userId: string
+}
+
+export async function getAllBudgets( userId : Props) {
+    console.log("userIDdd", userId)
+    await connectToDB()
+
+    const budgetList = Budget.find()
+
+    return budgetList;
+}

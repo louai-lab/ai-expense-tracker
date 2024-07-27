@@ -1,51 +1,29 @@
+import { getAllBudgets } from "../../../../../../lib/actions/budget.actions";
 import { fetchUser } from "../../../../../../lib/actions/user.actions";
+import BudgetItem from "./BudgetItem";
 import CreateBudget from "./CreateBudget";
 import { currentUser } from "@clerk/nextjs/server";
 
 
-export default async function BudgetList() {
+export default async function BudgetList({ userData }: any) {
 
-    let user;
-    let userInfo;
-    let loading = true;
-    let noUser = false
-
-    try {
-        user = await currentUser()
-
-        if (!user) {
-            noUser = true
-        }
-        else {
-            userInfo = await fetchUser(user?.id)
-            // console.log("user infoo", userInfo)
-        }
-    } catch (error: any) {
-        console.error('Error fetching user data:', error)
-    } finally {
-        loading = false
-    }
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    if (noUser) {
-        return <div>No user found</div>;
-    }
-
-    const userData = {
-        id: userInfo?._id.toString(),
-        clerkId: userInfo?.clerkId,
-        firstName: userInfo?.firstName,
-        lastName: userInfo?.lastName,
-        email: userInfo?.email,
-        image: userInfo?.image
-    }
+    const budgetList = await getAllBudgets(userData?.id)
 
     return (
         <div className="mt-6">
-            <CreateBudget userData={userData} />
+            <div className="flex flex-wrap gap-5">
+                <CreateBudget userData={userData} />
+                {budgetList?.length > 0
+                    ? budgetList.map((budget, index) => (
+                        <BudgetItem budget={budget} key={index} />
+                    ))
+                    : [1, 2, 3, 4, 5].map((item, index) => (
+                        <div key={index} className='w-full bg-slate-200 rounded-lg
+                    h-[150px] animate-pulse'>
+
+                        </div>
+                    ))}
+            </div>
         </div>
     )
 }

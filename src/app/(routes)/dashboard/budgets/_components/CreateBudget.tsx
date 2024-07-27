@@ -16,24 +16,27 @@ import { DatePickerDemo } from "@/components/ui/datePicker";
 import { useUser } from "@clerk/nextjs";
 import { createBudget } from "../../../../../../lib/actions/budget.actions";
 
-interface Props {
-    userData: {
-        id: string,
-        clerkId: string,
-        firstName: string,
-        lastName: string,
-        email: string,
-        image: string
-    }
-}
+// interface Props {
+//     userData: {
+//         id: string,
+//         clerkId: string,
+//         firstName: string,
+//         lastName: string,
+//         email: string,
+//         image: string
+//     }
+// }
 
-export default function CreateBudget({ userData }: Props) {
+export default function CreateBudget({ userData }: any) {
 
     const [description, setDescription] = useState("")
     const [amount, setAmount] = useState("")
     const [beginDate, setBeginDate] = useState<Date | undefined>(undefined);
     const [endingDate, setEndingDate] = useState<Date | undefined>(undefined);
     const { isLoaded, isSignedIn } = useUser()
+
+    const [dialogOpen, setDialogOpen] = useState(false); // Manage dialog state
+    const [newBudget, setNewBudget] = useState<any>(null);
 
     // console.log(userData)
 
@@ -44,27 +47,33 @@ export default function CreateBudget({ userData }: Props) {
             return;
         }
 
-        // console.log("try")
+        try {
+            const createdBudget = await createBudget({
+                description: description,
+                amount: amount,
+                beginDate: beginDate,
+                endingDate: endingDate,
+                userId: userData.id
+            });
 
-        await createBudget({
-            description: description,
-            amount: amount,
-            beginDate: beginDate,
-            endingDate: endingDate,
-            userId: userData.id
-        });
+            setNewBudget(createdBudget)
+            setDialogOpen(false)
+        } catch (error) {
+
+        }
     }
 
     if (!isLoaded) return <div>Loading ...</div>;
     if (!isSignedIn) return <div>Please sign in</div>;
 
     return (
-        <Dialog>
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger>
                 <div
-                    className='p-10 border-2 border-dashed rounded-2xl
+                    onClick={() => setDialogOpen(true)}
+                    className='w-fit h-[150px] p-10 border-2 border-dashed rounded-2xl
                          bg-slate-100 flex flex-col items-center 
-                          justify-center cursor-pointer hover:shadow-md'>
+                          justify-center cursor-pointer hover:shadow-md sm:h-[145px] sm:w-[223px]'>
                     <h1 className='text-3xl'>+</h1>
                     <h1>Create New Budget</h1>
                 </div>
