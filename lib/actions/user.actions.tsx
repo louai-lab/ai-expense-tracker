@@ -3,7 +3,7 @@
 import { connectToDB } from "../mongoose";
 import User from "../models/user.model";
 
-export async function createUser(user: string) {
+export async function createUser(user: any) {
     try {
         await connectToDB()
         const newUser = await User.create(user);
