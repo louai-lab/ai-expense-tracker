@@ -16,26 +16,15 @@ import { DatePickerDemo } from "@/components/ui/datePicker";
 import { useUser } from "@clerk/nextjs";
 import { createBudget } from "../../../../../../lib/actions/budget.actions";
 
-// interface Props {
-//     userData: {
-//         id: string,
-//         clerkId: string,
-//         firstName: string,
-//         lastName: string,
-//         email: string,
-//         image: string
-//     }
-// }
-
 export default function CreateBudget({ userData }: any) {
 
     const [description, setDescription] = useState("")
-    const [amount, setAmount] = useState("")
+    const [amount, setAmount] = useState<number>(0);
     const [beginDate, setBeginDate] = useState<Date | undefined>(undefined);
     const [endingDate, setEndingDate] = useState<Date | undefined>(undefined);
     const { isLoaded, isSignedIn } = useUser()
 
-    const [dialogOpen, setDialogOpen] = useState(false); // Manage dialog state
+    const [dialogOpen, setDialogOpen] = useState(false);
     const [newBudget, setNewBudget] = useState<any>(null);
 
     // console.log(userData)
@@ -56,10 +45,12 @@ export default function CreateBudget({ userData }: any) {
                 userId: userData.id
             });
 
+            // console.log("front", createdBudget)
+
             setNewBudget(createdBudget)
             setDialogOpen(false)
         } catch (error) {
-
+            console.log(error)
         }
     }
 
@@ -100,7 +91,10 @@ export default function CreateBudget({ userData }: any) {
                                     type="number"
                                     placeholder="e.g. 5000$"
                                     className='mt-1 border rounded-full'
-                                    onChange={(e) => setAmount(e.target.value)}
+                                    onChange={(e) => {
+                                        const value = parseFloat(e.target.value);
+                                        setAmount(isNaN(value) ? 0 : value);
+                                    }}
                                 />
                             </div>
 

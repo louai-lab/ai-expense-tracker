@@ -2,7 +2,7 @@ import mongoose, { Schema } from "mongoose";
 
 const budgetSchema = new mongoose.Schema({
     description: { type: String, required: true },
-    amount: { type: String, default: 0 },
+    amount: { type: Number, default: 0 },
     from: { type: Date, required: true },
     to: { type: Date, required: true },
     incomes: [{

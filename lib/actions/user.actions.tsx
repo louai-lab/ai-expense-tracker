@@ -14,9 +14,9 @@ export async function createUser(user: any) {
 }
 
 export async function fetchUser(userId: string) {
-    // console.log(userId)
+    // console.log("userID", userId)
     try {
-        connectToDB()
+        await connectToDB()
 
         return await User.findOne({ id: userId })
     } catch (error: any) {

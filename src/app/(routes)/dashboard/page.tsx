@@ -18,9 +18,10 @@ export default async function Content() {
         }
         else {
             userInfo = await fetchUser(user?.id)
+            // console.log(userInfo)
         }
     } catch (error: any) {
-        console.error('Error fetching user data:', error)
+        console.error('Error fetching user data dash:', error)
     } finally {
         loading = false
     }

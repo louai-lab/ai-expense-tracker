@@ -1,13 +1,12 @@
 import { getAllBudgets } from "../../../../../../lib/actions/budget.actions";
-import { fetchUser } from "../../../../../../lib/actions/user.actions";
 import BudgetItem from "./BudgetItem";
 import CreateBudget from "./CreateBudget";
-import { currentUser } from "@clerk/nextjs/server";
-
 
 export default async function BudgetList({ userData }: any) {
 
-    const budgetList = await getAllBudgets(userData?.id)
+    const budgetList = await getAllBudgets()
+
+    // console.log(budgetList)
 
     return (
         <div className="mt-6">
@@ -27,3 +26,4 @@ export default async function BudgetList({ userData }: any) {
         </div>
     )
 }
+

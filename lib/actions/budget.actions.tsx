@@ -2,10 +2,11 @@
 
 import { connectToDB } from "../mongoose";
 import Budget from "../models/budget.model";
+import Expense from "../models/expense.model";
 
 interface CreateBudgetParams {
     description: string;
-    amount: string;
+    amount: number;
     beginDate: Date | undefined;
     endingDate: Date | undefined;
     userId: string;
@@ -15,7 +16,6 @@ export async function createBudget({
     description, amount, beginDate, endingDate, userId
 }: CreateBudgetParams): Promise<void> {
     try {
-
 
         await connectToDB();
 
@@ -38,11 +38,34 @@ interface Props {
     userId: string
 }
 
-export async function getAllBudgets( userId : Props) {
-    console.log("userIDdd", userId)
+export async function getAllBudgets() {
+    // console.log("userIDdd", userId)
     await connectToDB()
 
-    const budgetList = Budget.find()
+    const budgetList = await Budget.find()
+        .populate({
+            path: "expenses",
+            model: Expense,
+            select: 'description amount userId budgetId',
+        })
+        .sort({ createdAt: -1 })
+        .exec();
 
     return budgetList;
+}
+
+
+export async function getOneBudget(id: string) {
+    // console.log(id)
+
+    await connectToDB()
+
+    try {
+        const budget = await Budget.findById(id)
+
+        return budget
+    } catch (error) {
+        console.error("Error while fetching budget:", error);
+        throw new Error("Unable to fetch budget");
+    }
 }
