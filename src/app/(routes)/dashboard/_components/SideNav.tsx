@@ -15,12 +15,12 @@ export default async function SideNav() {
             icon: LayoutGrid,
             path: "/dashboard",
         },
-        {
-            id: 2,
-            name: "Incomes",
-            icon: CircleDollarSign,
-            path: "/dashboard/incomes",
-        },
+        // {
+        //     id: 2,
+        //     name: "Incomes",
+        //     icon: CircleDollarSign,
+        //     path: "/dashboard/incomes",
+        // },
         {
             id: 2,
             name: "Budgets",

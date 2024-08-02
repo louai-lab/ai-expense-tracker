@@ -7,15 +7,9 @@ const userSchema = new mongoose.Schema({
     lastName: { type: String, required: true },
     email: { type: String, required: true },
     image: { type: String },
-    // budgets: [{
-    //     type: Schema.Types.ObjectId, ref: "Budget"
-    // }],
-    // incomes: [{
-    //     type: Schema.Types.ObjectId, ref: "Income"
-    // }],
-    // expenses: [{
-    //     type: Schema.Types.ObjectId, ref: "Expense"
-    // }],
+    totalBudgetAmount: { type: Number },
+    totalSpendAmount: { type: Number },
+    totalBudgetLength: { type: Number }
 });
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);

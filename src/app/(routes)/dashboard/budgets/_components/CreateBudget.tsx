@@ -23,6 +23,7 @@ export default function CreateBudget({ userData }: any) {
     const [beginDate, setBeginDate] = useState<Date | undefined>(undefined);
     const [endingDate, setEndingDate] = useState<Date | undefined>(undefined);
     const { isLoaded, isSignedIn } = useUser()
+    const [error, setError] = useState<string | null>(null);
 
     const [dialogOpen, setDialogOpen] = useState(false);
     const [newBudget, setNewBudget] = useState<any>(null);
@@ -36,8 +37,13 @@ export default function CreateBudget({ userData }: any) {
             return;
         }
 
+        if (amount < 0) {
+            setError('Amount cannot be less than 0');
+            return
+        }
+
         try {
-            const createdBudget = await createBudget({
+            const success = await createBudget({
                 description: description,
                 amount: amount,
                 beginDate: beginDate,
@@ -45,16 +51,19 @@ export default function CreateBudget({ userData }: any) {
                 userId: userData.id
             });
 
-            // console.log("front", createdBudget)
 
-            setNewBudget(createdBudget)
-            setDialogOpen(false)
+            if (success) {
+                console.log('Budget created successfully');
+                setDialogOpen(false)
+            } else {
+                console.error('Failed to create budget');
+            }
         } catch (error) {
             console.log(error)
         }
     }
 
-    if (!isLoaded) return <div>Loading ...</div>;
+    if (!isLoaded) return <div className='w-[100px] bg-slate-200 rounded-lg h-[100px] animate-pulse'></div>;
     if (!isSignedIn) return <div>Please sign in</div>;
 
     return (
@@ -73,6 +82,7 @@ export default function CreateBudget({ userData }: any) {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Create New Budget</DialogTitle>
+                    {error && <p className="text-red-500 mt-2">{error}</p>}
                     <DialogDescription>
                         <div className='bg-white mt-4'>
                             <div className='mt-2'>

@@ -4,7 +4,7 @@ import CreateBudget from "./CreateBudget";
 
 export default async function BudgetList({ userData }: any) {
 
-    const budgetList = await getAllBudgets()
+    const budgetList = await getAllBudgets(userData?.id)
 
     // console.log(budgetList)
 
@@ -12,13 +12,13 @@ export default async function BudgetList({ userData }: any) {
         <div className="mt-6">
             <div className="flex flex-wrap gap-5">
                 <CreateBudget userData={userData} />
-                {budgetList?.length > 0
+                {budgetList
                     ? budgetList.map((budget, index) => (
                         <BudgetItem budget={budget} key={index} />
                     ))
                     : [1, 2, 3, 4, 5].map((item, index) => (
                         <div key={index} className='w-full bg-slate-200 rounded-lg
-                    h-[150px] animate-pulse'>
+                             h-[150px] animate-pulse'>
 
                         </div>
                     ))}

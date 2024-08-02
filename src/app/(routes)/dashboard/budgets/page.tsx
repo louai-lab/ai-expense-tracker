@@ -8,30 +8,19 @@ async function Budgets() {
 
     let user;
     let userInfo;
-    let loading = true;
-    let noUser = false
 
     try {
         user = await currentUser()
+        console.log(user?.id)
 
         if (!user) {
-            noUser = true
+            console.log("no user from clerk")
         }
         else {
             userInfo = await fetchUser(user?.id)
         }
     } catch (error: any) {
         console.error('Error fetching user data budg:', error)
-    } finally {
-        loading = false
-    }
-
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    if (noUser) {
-        return <div>No user found</div>;
     }
 
 

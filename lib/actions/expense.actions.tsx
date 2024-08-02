@@ -11,7 +11,7 @@ interface CreateExpenseProps {
     budgetId: string;
 }
 
-export async function createExpense({ description, amount, userId, budgetId }: CreateExpenseProps): Promise<void> {
+export async function createExpense({ description, amount, userId, budgetId }: CreateExpenseProps) {
     try {
         await connectToDB()
 
@@ -24,12 +24,56 @@ export async function createExpense({ description, amount, userId, budgetId }: C
 
         await newExpense.save()
 
-        await Budget.findByIdAndUpdate(
+        const updatedBudget = await Budget.findByIdAndUpdate(
             budgetId,
             { $push: { expenses: newExpense._id } },
-            { new: true, useFindAndModify: false }
+            { new: true }
         )
+
+
+        if (!updatedBudget) {
+            console.log("Budget not found")
+            return
+        }
+
+        return true
+
     } catch (error) {
         console.error('Error creating expense:', error);
+    }
+}
+
+interface deleteProps {
+    id: string,
+    budgetId: string
+}
+
+export async function deleteExpense({ id, budgetId }: deleteProps) {
+
+    try {
+        await connectToDB();
+
+        const updatedBudget = await Budget.findByIdAndUpdate(
+            budgetId,
+            { $pull: { expenses: id } },
+            { new: true }
+        )
+
+        if (!updatedBudget) {
+            console.log('Budget not found')
+            return
+        }
+
+
+        const deletedExpense = await Expense.findByIdAndDelete(id);
+
+        if (!deletedExpense) {
+            console.log('Expense not found')
+            return
+        }
+        return true;
+
+    } catch (error) {
+        console.error('Error deleting expense:', error);
     }
 }

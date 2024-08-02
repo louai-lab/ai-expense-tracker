@@ -2,43 +2,58 @@ import React from "react";
 import { currentUser } from "@clerk/nextjs/server";
 import { fetchUser } from "../../../../lib/actions/user.actions";
 import { Sparkles } from "lucide-react";
+import CardInfo from "./_components/CardInfo";
+import { PiggyBank, ReceiptText, Wallet } from "lucide-react";
+import { getAllBudgets } from "../../../../lib/actions/budget.actions";
+import { BarChartsDashboard } from "./_components/BarChartsDashboard";
 
 export default async function Content() {
 
+    console.log("Dashboard page launching")
+
     let user;
     let userInfo;
-    let loading = true;
-    let noUser = false
 
     try {
+        console.log("before clerk")
         user = await currentUser()
+        console.log("after clerk!", user?.id)
 
         if (!user) {
-            noUser = true
+            console.log("no user from clerk")
         }
         else {
             userInfo = await fetchUser(user?.id)
-            // console.log(userInfo)
+            console.log(userInfo?._id)
         }
     } catch (error: any) {
         console.error('Error fetching user data dash:', error)
-    } finally {
-        loading = false
     }
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
+    const budgetList = await getAllBudgets(userInfo?._id)
 
-    if (noUser) {
-        return <div>No user found</div>;
-    }
+    // console.log(budgetList)
+
+    const chartData = budgetList
+        .slice(0, 5)
+        .map(budget => ({
+            from: budget.from,
+            to: budget.to,
+            amount: budget.amount,
+            spend: budget.spend,
+        }));
+
 
     return (
         <div className="p-8">
             <div>
-                <h1 className="text-4xl font-bold">
-                    Hi, {userInfo?.firstName}{" "}{userInfo?.lastName} 👋
+                <h1 className="text-4xl font-bold flex">
+                    Hi, {userInfo
+                        ? `${userInfo?.firstName} ${userInfo?.lastName}`
+                        : <div className='w-[150px] bg-slate-200 rounded-lg
+                        h-[50px] animate-pulse'>
+
+                        </div>} 👋
                 </h1>
                 <p className="mt-2 text-base text-gray-500">
                     Here's what happening with your money, let's Manage your expenses
@@ -67,6 +82,16 @@ export default async function Content() {
                     the release of Letraset sheets containing Lorem Ipsum passages,
                     and more recently with desktop publishing software like Aldus
                     PageMaker including versions of Lorem Ipsum.</p>
+            </div>
+
+            <div className="flex flex-col gap-4 items-center justify-between mt-4 lg:flex lg:flex-row ">
+                <CardInfo image={PiggyBank} caption="total Budget" total={userInfo?.totalBudgetAmount} />
+                <CardInfo image={ReceiptText} caption="total Spend" total={userInfo?.totalSpendAmount} />
+                <CardInfo image={Wallet} caption="No. Of Budget" total={userInfo?.totalBudgetLength} />
+            </div>
+
+            <div className="mt-5 mb-5">
+                <BarChartsDashboard data={chartData} />
             </div>
         </div>
     )
