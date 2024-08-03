@@ -6,6 +6,7 @@ import CardInfo from "./_components/CardInfo";
 import { PiggyBank, ReceiptText, Wallet } from "lucide-react";
 import { getAllBudgets } from "../../../../lib/actions/budget.actions";
 import { BarChartsDashboard } from "./_components/BarChartsDashboard";
+import getFinancialAdvice from "./_components/Advice";
 
 export default async function Content() {
 
@@ -43,9 +44,14 @@ export default async function Content() {
             spend: budget.spend,
         }));
 
+    const advice = await getFinancialAdvice(
+        userInfo?.totalBudgetAmount,
+        userInfo?.totalSpendAmount
+    )
+
 
     return (
-        <div className="p-8">
+        <div className="p-8 mb-5">
             <div>
                 <h1 className="text-4xl font-bold flex">
                     Hi, {userInfo
@@ -72,7 +78,7 @@ export default async function Content() {
                          background-animate"
                     />
                 </div>
-                <p className="pt-4">Lorem Ipsum is simply dummy text of the printing and
+                {/* <p className="pt-4">Lorem Ipsum is simply dummy text of the printing and
                     typesetting industry. Lorem Ipsum has been the industry's
                     standard dummy text ever since the 1500s, when an unknown
                     printer took a galley of type and scrambled it to make a type
@@ -81,7 +87,11 @@ export default async function Content() {
                     essentially unchanged. It was popularised in the 1960s with
                     the release of Letraset sheets containing Lorem Ipsum passages,
                     and more recently with desktop publishing software like Aldus
-                    PageMaker including versions of Lorem Ipsum.</p>
+                    PageMaker including versions of Lorem Ipsum.
+                </p> */}
+                <p>
+                    {advice}
+                </p>
             </div>
 
             <div className="flex flex-col gap-4 items-center justify-between mt-4 lg:flex lg:flex-row ">

@@ -77,3 +77,16 @@ export async function deleteExpense({ id, budgetId }: deleteProps) {
         console.error('Error deleting expense:', error);
     }
 }
+
+
+export async function getAllExpenses(id: string) {
+    // console.log("exxx",id)
+
+    await connectToDB()
+
+    const expensesList = await Expense.find({ userId: id })
+
+    // console.log(expensesList)
+
+    return expensesList
+}
