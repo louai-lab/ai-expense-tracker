@@ -37,7 +37,7 @@ const transformData = (data: BarChartsDashboardProps['data']) => {
 
 const chartConfig = {
     amount: {
-        label: "Amount",
+        label: "Budget",
         color: "#2563eb",
     },
     spend: {

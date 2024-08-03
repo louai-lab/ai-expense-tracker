@@ -14,11 +14,11 @@ export async function createUser(user: any) {
 }
 
 export async function fetchUser(userId: string) {
-    // console.log("userID", userId)
+    console.log("userIDddddd", userId)
     try {
         await connectToDB()
 
-        return await User.findOne({ id: userId })
+        return await User.findOne({ clerkId: userId })
     } catch (error: any) {
         throw new Error(`Failed to fetch user : ${error.message}`)
     }

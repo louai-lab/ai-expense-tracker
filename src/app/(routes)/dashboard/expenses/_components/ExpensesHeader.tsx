@@ -69,7 +69,7 @@ function ExpensesHeader({ budgetId, description, amount, from, to, expenses }: E
     return (
         <div className="flex justify-between">
             <span className="flex gap-2 items-center">
-                <ArrowLeft onClick={() => router.push('/budgets')} className="cursor-pointer" />
+                <ArrowLeft onClick={() => router.push('/dashboard/budgets')} className="cursor-pointer" />
                 <h1 className="text-2xl font-bold">My Expenses</h1>
             </span>
 

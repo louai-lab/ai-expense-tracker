@@ -85,6 +85,11 @@ export async function getAllExpenses(id: string) {
     await connectToDB()
 
     const expensesList = await Expense.find({ userId: id })
+        .populate({
+            path: "budgetId",
+            model: Budget,
+            select: 'description from to',
+        })
 
     // console.log(expensesList)
 
